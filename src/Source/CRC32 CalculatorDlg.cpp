@@ -409,25 +409,21 @@ crc CCRC32CalculatorDlg::getConfFileCRC(const std::string &getPathName) const
 void CCRC32CalculatorDlg::displayCRC(const std::wstring &fileName) const
 {
    std::wstringstream logEntry_w{};
-   std::wstring pBuffer_w{};
 
    // Hexadecimal Format
    logEntry_w << L"0x" << std::setfill(L'0') << std::setw(8) << std::right << std::hex << std::uppercase << crc32;
-   logEntry_w >> pBuffer_w;
-   GetDlgItem(IDC_EDIT_CRC32_HEX)->SetWindowTextW(pBuffer_w.c_str());
-   log.fileOutPut_w() << fileName << L" CRC32(Hex): " << pBuffer_w << std::endl << std::flush;
+   GetDlgItem(IDC_EDIT_CRC32_HEX)->SetWindowTextW(logEntry_w.str().c_str());
+   log.fileOutPut_w() << fileName << L" CRC32(Hex): " << logEntry_w.str() << std::endl << std::flush;
 
    // Clear the stream
    logEntry_w.str(L"");
    logEntry_w.clear();
-
-   pBuffer_w.erase();
    
    // Decimal Format
    logEntry_w << std::dec << crc32;
-   logEntry_w >> pBuffer_w;
-   GetDlgItem(IDC_EDIT_CRC32_DEC)->SetWindowTextW(pBuffer_w.c_str());
-   log.fileOutPut_w() << fileName << L" CRC32(Dec): " << pBuffer_w << std::endl << std::flush;
+
+   GetDlgItem(IDC_EDIT_CRC32_DEC)->SetWindowTextW(logEntry_w.str().c_str());
+   log.fileOutPut_w() << fileName << L" CRC32(Dec): " << logEntry_w.str() << std::endl << std::flush;
 
    // Clear the stream
    logEntry_w.str(L"");
