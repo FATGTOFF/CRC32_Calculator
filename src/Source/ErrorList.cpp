@@ -1,5 +1,5 @@
-#include "pch.h"
 #include "ErrorList.h"
+
 
 #if (DEBUG_ERROR)
 ErrorList::ErrorList()
@@ -13,16 +13,15 @@ ErrorList::ErrorList()
 }
 #endif // DEBUG
 
-int ErrorList::getErrorNumber() const noexcept
+constexpr int ErrorList::getErrorNumber() const
 {
    return errorNumber;
 }
 
 std::string ErrorList::getErrorMessage(const int errNum) const
 {
-   const auto findErrorNumber = errorMessageList.find(errNum);
-   
-   if (errorMessageList.end() != findErrorNumber)
+
+   if (errorMessageList.contains(errNum))
    {
       errorMessage = errorMessageList.at(errNum);
    }
@@ -36,9 +35,7 @@ std::string ErrorList::getErrorMessage(const int errNum) const
 
 std::wstring ErrorList::getErrorMessage_w(const int errNum) const
 {
-   const auto findErrorNumber = errorMessageList.find(errNum);
-
-   if (errorMessageList.end() != findErrorNumber)
+   if (errorMessageList.contains(errNum))
    {
       errorMessage_w = errorMessageList_w.at(errNum);
    }
@@ -60,7 +57,7 @@ void ErrorList::printErrorMessage(const std::string& errTypeMsg, const int errNu
    outErrorFile.close();
 
      // Open the file for the user to see the contents of the file.
-     ShellExecute(nullptr, _T("open"), getErrorLogPathName.c_str(), nullptr, nullptr, SW_SHOW);
+     ShellExecute(nullptr, L"open", getErrorLogPathName.c_str(), nullptr, nullptr, SW_SHOW);
 
 }
 
@@ -73,7 +70,7 @@ void ErrorList::printErrorMessage_w(const std::wstring& errTypeMsg, const int er
    outErrorFile << errTypeMsg << errNum << " - " << getErrorMessage_w(errNum) << std::endl;
 
      // Open the file for the user to see the contents of the file.
-     ShellExecute(nullptr, _T("open"), getErrorLogPathName.c_str(), nullptr, nullptr, SW_SHOW);
+     ShellExecute(nullptr, L"open", getErrorLogPathName.c_str(), nullptr, nullptr, SW_SHOW);
 }
 
 void ErrorList::printErrorMessage(const int errNum) const
@@ -86,5 +83,5 @@ void ErrorList::printErrorMessage(const int errNum) const
    outErrorFile.close();
 
    // Open the file for the user to see the contents of the file.
-   ShellExecute(nullptr, _T("open"), getErrorLogPathName.c_str(), nullptr, nullptr, SW_SHOW);
+   ShellExecute(nullptr, L"open", getErrorLogPathName.c_str(), nullptr, nullptr, SW_SHOW);
 }

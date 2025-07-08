@@ -2,7 +2,6 @@
 // CRC32 Calculator.cpp : Defines the class behaviors for the application.
 //
 
-#include "pch.h"
 #include "framework.h"
 #include "CRC32 Calculator.h"
 #include "CRC32 CalculatorDlg.h"

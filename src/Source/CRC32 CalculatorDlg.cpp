@@ -2,7 +2,6 @@
 // CRC32 CalculatorDlg.cpp : implementation file
 //
 
-#include "pch.h"
 #include "framework.h"
 #include "CRC32 Calculator.h"
 #include "CRC32 CalculatorDlg.h"
@@ -52,7 +51,7 @@ END_MESSAGE_MAP()
 CCRC32CalculatorDlg::CCRC32CalculatorDlg(CWnd* pParent /*=nullptr*/)
    : CDialogEx(IDD_CRC32CALCULATOR_DIALOG, pParent)
 {
-   log.fileOutPut() << "Program Started\n" << std::flush;
+   log.fileOutPut(GET_DAY_MON_YR_HR_MIN_SEC_MS()) << "Program Started\n" << std::flush;
    m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
    crcInit();
@@ -177,11 +176,11 @@ void CCRC32CalculatorDlg::OnBnClickedButtonOpenFile()
    {
 
       CT2CA pszConvertedAnsiString(dialogFileOpen.GetPathName());
-      std::string getPathName = pszConvertedAnsiString;
-      log.fileOutPut() << "File selected: " << getPathName << std::endl << std::flush;
+      const auto getPathName = static_cast<std::string>(pszConvertedAnsiString);
+      log.fileOutPut(GET_DAY_MON_YR_HR_MIN_SEC_MS()) << "File selected: " << pszConvertedAnsiString << std::endl << std::flush;
 
       GetDlgItem(IDC_STATIC_FILE_LOCATION)->SetWindowTextW(dialogFileOpen.GetFileName());
-      std::wstring getFileName = dialogFileOpen.GetFileName();
+      const auto getFileName = static_cast<std::wstring>(dialogFileOpen.GetFileName());
 
       if (L"conf" == dialogFileOpen.GetFileExt())
       {
@@ -192,19 +191,19 @@ void CCRC32CalculatorDlg::OnBnClickedButtonOpenFile()
          crc32 = getBinaryFileCRC(getPathName);
       }
 
-      displayCRC(getFileName);
+      DisplayCRC(getFileName);
    }
 
 }
 
-void CCRC32CalculatorDlg::crcInit() noexcept
+constexpr void CCRC32CalculatorDlg::crcInit() noexcept
 {
    crc   remainder{};
 
    /*
     * Compute the remainder of each possible dividend.
     */
-   for (int dividend = 0; dividend < SIZEOFCRCTABLE; ++dividend)
+   for (int dividend = 0; dividend < 256; ++dividend)
    {
       /*
        * Start with the dividend followed by zeros.
@@ -236,7 +235,7 @@ void CCRC32CalculatorDlg::crcInit() noexcept
 
       if (DEBUG_LOGGER)
       {
-         log.fileOutPut() << std::setfill('0') << std::setw(8) 
+         log.fileOutPut(GET_DAY_MON_YR_HR_MIN_SEC_MS()) << std::setfill('0') << std::setw(8)
             << std::right << std::hex << std::uppercase 
             << crcTable.at(dividend) << std::endl;
       }
@@ -267,12 +266,12 @@ crc CCRC32CalculatorDlg::reflect(unsigned long data, bits nBits) const
    return reflection;
 }
 
-crc CCRC32CalculatorDlg::reflect_data(unsigned long X) const
+crc CCRC32CalculatorDlg::REFLECT_DATA(unsigned long X) const
 {
    return reflect(X, 8);
 }
 
-crc CCRC32CalculatorDlg::reflect_remainder(unsigned long X) const
+crc CCRC32CalculatorDlg::REFLECT_REMAINDER(unsigned long X) const
 {
    return reflect(X, WIDTH);
 }
@@ -298,7 +297,7 @@ crc CCRC32CalculatorDlg::getBinaryFileCRC(const std::string &getPathName) const
     */
    for (bytes byte = 0; byte < static_cast<bytes>(buffer.size()); ++byte)
    {
-      data = static_cast<bits>(reflect_data(buffer.at(byte)) ^ (remainder >> (WIDTH - 8)));
+      data = static_cast<bits>(REFLECT_DATA(buffer.at(byte)) ^ (remainder >> (WIDTH - 8)));
       remainder = crcTable.at(data) ^ (remainder << 8);
    }
 
@@ -307,7 +306,7 @@ crc CCRC32CalculatorDlg::getBinaryFileCRC(const std::string &getPathName) const
    /*
     * The final remainder is the CRC.
     */
-   return reflect_remainder(remainder) ^ FINAL_XOR_VALUE;
+   return REFLECT_REMAINDER(remainder) ^ FINAL_XOR_VALUE;
 }
 
 crc CCRC32CalculatorDlg::getConfFileCRC(const std::string &getPathName) const
@@ -395,35 +394,39 @@ crc CCRC32CalculatorDlg::getConfFileCRC(const std::string &getPathName) const
       */
       for (bytes byte = 0; byte < static_cast<bytes>(newHexValue.size()); ++byte)
       {
-         data = static_cast<bits>(reflect_data(newHexValue.at(byte)) ^ (remainder >> (WIDTH - 8)));
+         data = static_cast<bits>(REFLECT_DATA(newHexValue.at(byte)) ^ (remainder >> (WIDTH - 8)));
          remainder = crcTable.at(data) ^ (remainder << 8);
       }
 
       /*
       * The final remainder is the CRC.
       */
-      return reflect_remainder(remainder) ^ FINAL_XOR_VALUE;
+      return REFLECT_REMAINDER(remainder) ^ FINAL_XOR_VALUE;
    }
 }
 
-void CCRC32CalculatorDlg::displayCRC(const std::wstring &fileName) const
+void CCRC32CalculatorDlg::DisplayCRC(const std::wstring &fileName) const
 {
    std::wstringstream logEntry_w{};
+   std::wstring pBuffer_w{};
 
    // Hexadecimal Format
    logEntry_w << L"0x" << std::setfill(L'0') << std::setw(8) << std::right << std::hex << std::uppercase << crc32;
-   GetDlgItem(IDC_EDIT_CRC32_HEX)->SetWindowTextW(logEntry_w.str().c_str());
-   log.fileOutPut_w() << fileName << L" CRC32(Hex): " << logEntry_w.str() << std::endl << std::flush;
+   logEntry_w >> pBuffer_w;
+   GetDlgItem(IDC_EDIT_CRC32_HEX)->SetWindowTextW(pBuffer_w.c_str());
+   log.fileOutPut_w(GET_DAY_MON_YR_HR_MIN_SEC_MS()) << fileName << L" CRC32(Hex): " << pBuffer_w << std::endl << std::flush;
 
    // Clear the stream
    logEntry_w.str(L"");
    logEntry_w.clear();
+
+   pBuffer_w.erase();
    
    // Decimal Format
    logEntry_w << std::dec << crc32;
-
-   GetDlgItem(IDC_EDIT_CRC32_DEC)->SetWindowTextW(logEntry_w.str().c_str());
-   log.fileOutPut_w() << fileName << L" CRC32(Dec): " << logEntry_w.str() << std::endl << std::flush;
+   logEntry_w >> pBuffer_w;
+   GetDlgItem(IDC_EDIT_CRC32_DEC)->SetWindowTextW(pBuffer_w.c_str());
+   log.fileOutPut_w(GET_DAY_MON_YR_HR_MIN_SEC_MS()) << fileName << L" CRC32(Dec): " << pBuffer_w << std::endl << std::flush;
 
    // Clear the stream
    logEntry_w.str(L"");

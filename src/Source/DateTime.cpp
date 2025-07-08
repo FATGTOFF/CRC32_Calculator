@@ -1,12 +1,11 @@
-#include "pch.h"
 #include "DateTime.h"
 
-std::string DateTime::getMonth(const Month month) const
+constexpr std::string DateTime::getMonth(const Month month) const
 {
     return listOfMonths.at(month);
 }
 
-std::wstring DateTime::getMonth_w(const Month month) const
+constexpr std::wstring DateTime::getMonth_w(const Month month) const
 {
    return listOfMonths_w.at(month);
 }
@@ -26,6 +25,7 @@ void DateTime::clearPBuffer_w() const
 DateTime::DateTime() : ErrorList()
 {
 
+    using enum DateTime::TypesOfTimeException;
     // Set time zone from TZ environment variable. If TZ is not set,
     // the operating system is queried to obtain the default value
     // for the variable.
@@ -33,22 +33,22 @@ DateTime::DateTime() : ErrorList()
 
    static_cast<void>(_time64(&aclock));
 
-    exceptionsTypes.at(static_cast<int>(TypesOfTimeException::FTimeException))->setErrorNumber(_ftime64_s(&tstruct));
-    if (0 != exceptionsTypes.at(static_cast<int>(TypesOfTimeException::FTimeException))->getTimeException())
+    exceptionsTypes.at(static_cast<int>(FTimeException))->setErrorNumber(_ftime64_s(&tstruct));
+    if (0 != exceptionsTypes.at(static_cast<int>(FTimeException))->getTimeException())
     {
         ErrorList errorList{};
-        errorList.printErrorMessage(exceptionsTypes.at(static_cast<int>(TypesOfTimeException::FTimeException))->what(),
-            exceptionsTypes.at(static_cast<int>(TypesOfTimeException::FTimeException))->getTimeException());
-        throw GetFTimeException(exceptionsTypes.at(static_cast<int>(TypesOfTimeException::FTimeException))->getTimeException());
+        errorList.printErrorMessage(exceptionsTypes.at(static_cast<int>(FTimeException))->what(),
+            exceptionsTypes.at(static_cast<int>(FTimeException))->getTimeException());
+        throw GetFTimeException(exceptionsTypes.at(static_cast<int>(FTimeException))->getTimeException());
     }
 
-    exceptionsTypes.at(static_cast<int>(TypesOfTimeException::LocalTimeException))->setErrorNumber(_localtime64_s(&newtime, &aclock));
-    if (0 != exceptionsTypes.at(static_cast<int>(TypesOfTimeException::LocalTimeException))->getTimeException())
+    exceptionsTypes.at(static_cast<int>(LocalTimeException))->setErrorNumber(_localtime64_s(&newtime, &aclock));
+    if (0 != exceptionsTypes.at(static_cast<int>(LocalTimeException))->getTimeException())
     {
         ErrorList errorList{};
-        errorList.printErrorMessage(exceptionsTypes.at(static_cast<int>(TypesOfTimeException::LocalTimeException))->what(),
-            exceptionsTypes.at(static_cast<int>(TypesOfTimeException::LocalTimeException))->getTimeException());
-        throw GetLocalTimeException(exceptionsTypes.at(static_cast<int>(TypesOfTimeException::LocalTimeException))->getTimeException());
+        errorList.printErrorMessage(exceptionsTypes.at(static_cast<int>(LocalTimeException))->what(),
+            exceptionsTypes.at(static_cast<int>(LocalTimeException))->getTimeException());
+        throw GetLocalTimeException(exceptionsTypes.at(static_cast<int>(LocalTimeException))->getTimeException());
 
     }
 
@@ -84,6 +84,88 @@ std::wstring DateTime::getDayMonthYrHrMinSecMs_w() const
 
 
    return pBuffer_w.str();
+}
+
+std::string DateTime::getDayMonthYrHrMinSecs() const
+{
+    clearPBuffer();
+
+    pBuffer << std::setw(2) << std::setfill('0') << newtime.tm_mday << ' '
+        << std::setw(2) << std::setfill('0') << getMonth(static_cast<Month>(newtime.tm_mon)) << ' '
+        << std::setw(2) << std::setfill('0') << (newtime.tm_year - 100) << ' '
+        << std::setw(2) << std::setfill('0') << newtime.tm_hour << ':'
+        << std::setw(2) << std::setfill('0') << newtime.tm_min << ':'
+        << std::setw(2) << std::setfill('0') << newtime.tm_sec << " ";
+
+
+    return pBuffer.str();
+}
+
+std::wstring DateTime::getDayMonthYrHrMinSecs_w() const
+{
+    clearPBuffer_w();
+
+    pBuffer_w << std::setw(2) << std::setfill(L'0') << newtime.tm_mday << L' '
+        << std::setw(2) << std::setfill(L'0') << getMonth_w(static_cast<Month>(newtime.tm_mon)) << L' '
+        << std::setw(2) << std::setfill(L'0') << (newtime.tm_year - 100) << L' '
+        << std::setw(2) << std::setfill(L'0') << newtime.tm_hour << L':'
+        << std::setw(2) << std::setfill(L'0') << newtime.tm_min << L':'
+        << std::setw(2) << std::setfill(L'0') << newtime.tm_sec << L" ";
+
+
+    return pBuffer_w.str();
+}
+
+std::string DateTime::getDayMonthYrHrMins() const
+{
+    clearPBuffer();
+
+    pBuffer << std::setw(2) << std::setfill('0') << newtime.tm_mday << ' '
+        << std::setw(2) << std::setfill('0') << getMonth(static_cast<Month>(newtime.tm_mon)) << ' '
+        << std::setw(2) << std::setfill('0') << (newtime.tm_year - 100) << ' '
+        << std::setw(2) << std::setfill('0') << newtime.tm_hour << ':'
+        << std::setw(2) << std::setfill('0') << newtime.tm_min << " ";
+
+
+    return pBuffer.str();
+}
+
+std::wstring DateTime::getDayMonthYrHrMins_w() const
+{
+    clearPBuffer_w();
+
+    pBuffer_w << std::setw(2) << std::setfill(L'0') << newtime.tm_mday << L' '
+        << std::setw(2) << std::setfill(L'0') << getMonth_w(static_cast<Month>(newtime.tm_mon)) << L' '
+        << std::setw(2) << std::setfill(L'0') << (newtime.tm_year - 100) << L' '
+        << std::setw(2) << std::setfill(L'0') << newtime.tm_hour << L':'
+        << std::setw(2) << std::setfill(L'0') << newtime.tm_min << L" ";
+
+
+    return pBuffer_w.str();
+}
+
+std::string DateTime::getDayMonthYr() const
+{
+    clearPBuffer();
+
+    pBuffer << std::setw(2) << std::setfill('0') << newtime.tm_mday << ' '
+        << std::setw(2) << std::setfill('0') << getMonth(static_cast<Month>(newtime.tm_mon)) << ' '
+        << std::setw(2) << std::setfill('0') << (newtime.tm_year - 100) << " ";
+
+
+    return pBuffer.str();
+}
+
+std::wstring DateTime::getDayMonthYr_w() const
+{
+    clearPBuffer_w();
+
+    pBuffer_w << std::setw(2) << std::setfill(L'0') << newtime.tm_mday << L' '
+        << std::setw(2) << std::setfill(L'0') << getMonth_w(static_cast<Month>(newtime.tm_mon)) << L' '
+        << std::setw(2) << std::setfill(L'0') << (newtime.tm_year - 100) << L" ";
+
+
+    return pBuffer_w.str();
 }
 
 std::string DateTime::getHrMinSecMs() const
@@ -302,6 +384,24 @@ std::wstring DateTime::getMills_w() const
     pBuffer_w << std::setw(4) <<
         std::setfill(L'0') <<
         tstruct.millitm << L" ";
+
+    return pBuffer_w.str();
+}
+
+std::string DateTime::getNoTimeStamp() const
+{
+    clearPBuffer();
+
+    pBuffer << "";
+
+    return pBuffer.str();
+}
+
+std::wstring DateTime::getNoTimeStamp_w() const
+{
+    clearPBuffer_w();
+
+    pBuffer_w << L"";
 
     return pBuffer_w.str();
 }
