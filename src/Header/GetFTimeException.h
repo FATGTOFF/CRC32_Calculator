@@ -1,7 +1,7 @@
 #ifndef _GETFTIMEEXCEPTION_
 #define _GETFTIMEEXCEPTION_
-#include <string>
 #include "GetTimeExceptionBase.h"
+#include <string>
 
 class GetFTimeException : public GetTimeExceptionBase
 {

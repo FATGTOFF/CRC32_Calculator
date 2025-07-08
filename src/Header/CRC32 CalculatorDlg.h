@@ -19,6 +19,7 @@ using crc = unsigned long;
 using bytes = int;
 using bits = uint8_t;
 
+constexpr uint16_t SIZEOFCRCTABLE{ 256 };
 
 // CCRC32CalculatorDlg dialog
 class CCRC32CalculatorDlg : public CDialogEx
@@ -51,7 +52,6 @@ public:
 private:
    Logger log{};
    /* Constant values that we can define it at compile time. */
-   static constexpr uint16_t SIZEOFCRCTABLE{ 256 };
    static constexpr uint32_t POLYNOMIAL{ 0x04C11DB7 };
    static constexpr uint32_t INITIAL_REMAINDER{ 0xFFFFFFFF };
    static constexpr uint32_t FINAL_XOR_VALUE{ 0xFFFFFFFF };
@@ -60,12 +60,12 @@ private:
    static constexpr int TOPBIT{ 1 << (WIDTH - 1) };
 
    crc reflect(unsigned long data, bits nBits) const;
-   crc reflect_data(unsigned long X) const;
-   crc reflect_remainder(unsigned long X) const;
+   crc REFLECT_DATA(unsigned long X) const;
+   crc REFLECT_REMAINDER(unsigned long X) const;
    crc getBinaryFileCRC(const std::string &) const;
    crc getConfFileCRC(const std::string &) const;
-   void displayCRC(const std::wstring &) const;
-   void crcInit() noexcept;
+   void DisplayCRC(const std::wstring &) const;
+   constexpr void crcInit() noexcept;
 
    crc crc32{ 0xFFFFFFFF };
    std::array<crc, SIZEOFCRCTABLE> crcTable{};

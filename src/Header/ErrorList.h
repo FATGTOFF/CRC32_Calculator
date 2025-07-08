@@ -1,11 +1,12 @@
 #ifndef _ERRORLIST_
 #define _ERRORLIST_
 
-#include <map>
 #include <cerrno>
-#include <string>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <map>
+#include <string>
+#include <Windows.h>
 
 #define DEBUG_ERROR false
 
@@ -178,7 +179,7 @@ private:
       {EOWNERDEAD,      L"Not a stream."},
       {EPROTO,          L"Protocol error."},
       {EPROTONOSUPPORT, L"Protocol not supported."},
-      {EPROTOTYPE,	  L"Wrong protocol type."},
+      {EPROTOTYPE,	    L"Wrong protocol type."},
       {ETIME,           L"Stream timeout."},
       {ETIMEDOUT,       L"Timed out."},
       {ETXTBSY,         L"Text file busy."},
@@ -195,17 +196,17 @@ private:
 public:
 
 #if (!DEBUG_ERROR)
-   ErrorList() = default;
+    constexpr ErrorList() = default;
 #else
    ErrorList();
 #endif // !DEBUG
 
 protected:
-   int getErrorNumber() const noexcept;
-   std::string getErrorMessage(const int errNum) const;
-   std::wstring getErrorMessage_w(const int errNum) const;
+    std::string getErrorMessage(const int errNum) const;
+    std::wstring getErrorMessage_w(const int errNum) const;
 
  public:
+   constexpr int getErrorNumber() const;
    void printErrorMessage(const std::string& errTypeMsg, const int errNum) const;
    void printErrorMessage_w(const std::wstring& errTypeMsg, const int errNum) const;
    void printErrorMessage(const int errNum) const;

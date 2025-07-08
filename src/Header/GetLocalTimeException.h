@@ -1,7 +1,7 @@
 #ifndef _GETLOCALTIMEEXCEPTION_
 #define _GETLOCALTIMEEXCEPTION_
-#include <string>
 #include "GetTimeExceptionBase.h"
+#include <string>
 
 class GetLocalTimeException : public GetTimeExceptionBase
 {

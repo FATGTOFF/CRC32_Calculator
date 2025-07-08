@@ -1,19 +1,19 @@
 #ifndef _DATETIME_
 #define _DATETIME_
 
-#include <iostream>
-#include <ctime>  
-#include <iomanip>
-#include <sstream>
-#include <string>
-#include <map>
-#include <sys/timeb.h> // struct _timeb
-#include <memory>
-#include <array>
 #include "ErrorList.h"
-#include "GetTimeExceptionBase.h"
 #include "GetFTimeException.h"
 #include "GetLocalTimeException.h"
+#include "GetTimeExceptionBase.h"
+#include <array>
+#include <ctime>  
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <sys/timeb.h> // struct _timeb
 
 class DateTime : public ErrorList
 {
@@ -69,23 +69,41 @@ private:
        std::make_unique<GetLocalTimeException>()
     };
 
-    long long aclock{};
+    time_t aclock{};
     struct _timeb tstruct{};
     struct tm newtime{};
     mutable std::ostringstream pBuffer{};
     mutable std::wostringstream pBuffer_w{};
-    std::string getMonth(const Month) const;
-    std::wstring getMonth_w(const Month) const;
+    constexpr std::string getMonth(const Month) const;
+    constexpr std::wstring getMonth_w(const Month) const;
     void clearPBuffer() const;
     void clearPBuffer_w() const;
 
 public:
 
-// Supress the warning on Time default constructor.
+    enum class TimeStamp
+    {
+        LOG_NO_DATE_TIME_GROUP,
+        LOG_DAY_MON_YR_HR_MIN_SEC_MS,
+        LOG_DAY_MON_YR_HR_MIN_SEC,
+        LOG_DAY_MON_YR_HR_MIN,
+        LOG_DAY_MON_YR, 
+        LOG_HR_MIN_SEC_MS,
+        LOG_HR_MIN_SEC,
+        LOG_HR_MIN,
+        LOG_DAY,
+        LOG_MONTH,
+        LOG_YEAR,
+        LOG_HRS,
+        LOG_MINS,
+        LOG_SECS,
+        LOG_MS
+    };
+// Suppress the warning on Time default constructor.
 // warning C26455: Default constructor may not throw. 
 // Declare it 'noexcept' (f.6).
 #pragma warning( disable : 26455)
-// Supress the warning on Time default constructor.
+// Suppress the warning on Time default constructor.
 // warning C26823: Dereferencing a possibly null pointer 
 // (lifetime.1).
 #pragma warning( disable : 26823)
@@ -93,6 +111,12 @@ public:
 
    std::string getDayMonthYrHrMinSecMs() const;
    std::wstring getDayMonthYrHrMinSecMs_w() const;
+   std::string getDayMonthYrHrMinSecs() const;
+   std::wstring getDayMonthYrHrMinSecs_w() const;
+   std::string getDayMonthYrHrMins() const;
+   std::wstring getDayMonthYrHrMins_w() const;
+   std::string getDayMonthYr() const;
+   std::wstring getDayMonthYr_w() const;
    std::string getHrMinSecMs() const;
    std::wstring getHrMinSecMs_w() const;
    std::string getHrMinSecs() const;
@@ -113,6 +137,8 @@ public:
    std::wstring getSecs_w() const;
    std::string getMills() const;
    std::wstring getMills_w() const;
+   std::string getNoTimeStamp() const;
+   std::wstring getNoTimeStamp_w() const;
 
 };
 
