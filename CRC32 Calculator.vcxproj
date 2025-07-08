@@ -96,6 +96,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>.\src\Source;.\src\Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -121,6 +122,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>.\src\Source;.\src\Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,6 +152,7 @@
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <CompileAs>Default</CompileAs>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>.\src\Source;.\src\Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -179,6 +182,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>.\src\Source;.\src\Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -197,29 +201,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CRC32 Calculator.h" />
-    <ClInclude Include="CRC32 CalculatorDlg.h" />
-    <ClInclude Include="DateTime.h" />
-    <ClInclude Include="ErrorList.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="GetFTimeException.h" />
-    <ClInclude Include="GetLocalTimeException.h" />
-    <ClInclude Include="GetTimeExceptionBase.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="targetver.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="CRC32 Calculator.cpp" />
-    <ClCompile Include="CRC32 CalculatorDlg.cpp" />
-    <ClCompile Include="DateTime.cpp" />
-    <ClCompile Include="ErrorList.cpp" />
-    <ClCompile Include="GetFTimeException.cpp" />
-    <ClCompile Include="GetLocalTimeException.cpp" />
-    <ClCompile Include="GetTimeExceptionBase.cpp" />
-    <ClCompile Include="Logger.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="CRC32Calculator.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +212,30 @@
     <Image Include="res\CRC32 Calculator.ico" />
     <Image Include="res\icon1.ico" />
     <Image Include="res\New folder\CRC32 Calculator.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Header\CRC32 Calculator.h" />
+    <ClInclude Include="src\Header\CRC32 CalculatorDlg.h" />
+    <ClInclude Include="src\Header\DateTime.h" />
+    <ClInclude Include="src\Header\ErrorList.h" />
+    <ClInclude Include="src\Header\framework.h" />
+    <ClInclude Include="src\Header\GetFTimeException.h" />
+    <ClInclude Include="src\Header\GetLocalTimeException.h" />
+    <ClInclude Include="src\Header\GetTimeExceptionBase.h" />
+    <ClInclude Include="src\Header\Logger.h" />
+    <ClInclude Include="src\Header\resource.h" />
+    <ClInclude Include="src\Header\SharedMemory.h" />
+    <ClInclude Include="src\Header\targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Source\CRC32 Calculator.cpp" />
+    <ClCompile Include="src\Source\CRC32 CalculatorDlg.cpp" />
+    <ClCompile Include="src\Source\DateTime.cpp" />
+    <ClCompile Include="src\Source\ErrorList.cpp" />
+    <ClCompile Include="src\Source\GetFTimeException.cpp" />
+    <ClCompile Include="src\Source\GetLocalTimeException.cpp" />
+    <ClCompile Include="src\Source\GetTimeExceptionBase.cpp" />
+    <ClCompile Include="src\Source\Logger.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
